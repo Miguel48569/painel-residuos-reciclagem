@@ -7,7 +7,7 @@ import pandas as pd
 from datetime import timedelta
 
 # --- CONFIGURAÇÃO ---
-CHANNEL_ID = '3178808'  # <--- COLOQUE SEU ID AQUI
+CHANNEL_ID = '3178808'  # Seu ID
 READ_API_KEY = '' 
 
 # URL da fonte (Montserrat) para garantir que carregue
@@ -36,6 +36,10 @@ def get_data(start_date=None, end_date=None):
 # --- APP SETUP ---
 # Carrega o tema CYBORG e a fonte do Google
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG, FONT_URL])
+
+# 👇👇👇 AQUI ESTÁ A CORREÇÃO MÁGICA 👇👇👇
+server = app.server 
+# 👆👆👆 O Render precisa disso para funcionar com Gunicorn
 
 app.layout = dbc.Container([
     # Cabeçalho
@@ -122,34 +126,40 @@ def atualizar(n, start, end, reset):
         return fig_vazia, fig_vazia, "--", "--", start, end
 
     # Tratamento
-    df['created_at'] = pd.to_datetime(df['created_at']) - timedelta(hours=3)
-    df['field1'] = pd.to_numeric(df['field1'], errors='coerce')
-    df['field2'] = pd.to_numeric(df['field2'], errors='coerce')
+    try:
+        df['created_at'] = pd.to_datetime(df['created_at']) - timedelta(hours=3)
+        df['field1'] = pd.to_numeric(df['field1'], errors='coerce')
+        df['field2'] = pd.to_numeric(df['field2'], errors='coerce')
 
-    last_org = f"{df['field1'].iloc[-1]:.1f}" if not df['field1'].empty else "-"
-    last_rec = f"{df['field2'].iloc[-1]:.1f}" if not df['field2'].empty else "-"
+        last_org = f"{df['field1'].iloc[-1]:.1f}" if not df['field1'].empty else "-"
+        last_rec = f"{df['field2'].iloc[-1]:.1f}" if not df['field2'].empty else "-"
 
-    # Gráfico Orgânico
-    fig_org = go.Figure(go.Scatter(
-        x=df['created_at'], y=df['field1'],
-        mode='lines',
-        line=dict(color='#ff7675', width=3, shape='spline'), # Cor suave
-        fill='tozeroy',
-        name='Orgânico'
-    ))
-    fig_org.update_layout(title='Nível Orgânico', **layout_base)
+        # Gráfico Orgânico
+        fig_org = go.Figure(go.Scatter(
+            x=df['created_at'], y=df['field1'],
+            mode='lines',
+            line=dict(color='#ff7675', width=3, shape='spline'), # Cor suave
+            fill='tozeroy',
+            name='Orgânico'
+        ))
+        fig_org.update_layout(title='Nível Orgânico', **layout_base)
 
-    # Gráfico Reciclável
-    fig_rec = go.Figure(go.Scatter(
-        x=df['created_at'], y=df['field2'],
-        mode='lines',
-        line=dict(color='#55efc4', width=3, shape='spline'), # Cor suave
-        fill='tozeroy',
-        name='Reciclável'
-    ))
-    fig_rec.update_layout(title='Nível Reciclável', **layout_base)
+        # Gráfico Reciclável
+        fig_rec = go.Figure(go.Scatter(
+            x=df['created_at'], y=df['field2'],
+            mode='lines',
+            line=dict(color='#55efc4', width=3, shape='spline'), # Cor suave
+            fill='tozeroy',
+            name='Reciclável'
+        ))
+        fig_rec.update_layout(title='Nível Reciclável', **layout_base)
 
-    return fig_org, fig_rec, last_org, last_rec, start, end
+        return fig_org, fig_rec, last_org, last_rec, start, end
+    except Exception as e:
+        print(f"Erro no processamento: {e}")
+        fig_vazia = go.Figure()
+        fig_vazia.update_layout(title="Erro ao processar dados", **layout_base)
+        return fig_vazia, fig_vazia, "Erro", "Erro", start, end
 
 if __name__ == '__main__':
     app.run(debug=True)

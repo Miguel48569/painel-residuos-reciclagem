@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block content %}
+<div class="col-md-8 col-lg-6">
+  <div class="card glass-card">
+    <div class="card-body p-5">
+      <div class="row align-items-center">
+        <div
+          class="col-md-6 text-center border-end border-secondary mb-4 mb-md-0"
+        >
+          <div class="bg-white p-2 d-inline-block rounded mb-3">
+            <img
+              src="{{ img_uri }}"
+              alt="QR Code"
+              class="img-fluid"
+              style="max-width: 180px"
+            />
+          </div>
+          <p class="text-muted small mb-1">
+            Chave Manual (se a câmera falhar):
+          </p>
+          <code class="text-warning user-select-all">{{ secret }}</code>
+        </div>
+
+        <div class="col-md-6 ps-md-4">
+          <h4 class="fw-bold mb-3 text-white">
+            <i class="fas fa-mobile-alt me-2"></i>Ative o 2FA
+          </h4>
+          <ol class="text-muted list-group-numbered ps-3 mb-4">
+            <li class="mb-2">
+              Baixe o <strong>Microsoft Authenticator</strong>
+              no seu celular.
+            </li>
+            <li class="mb-2">Toque em "+" e escolha "Escanear código QR".</li>
+            <li>Aponte a câmera para a imagem ao lado.</li>
+          </ol>
+
+          <div class="d-grid">
+            <a href="/login" class="btn btn-eco">
+              JÁ ESCANEIEI, IR PARA LOGIN <i class="fas fa-check ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

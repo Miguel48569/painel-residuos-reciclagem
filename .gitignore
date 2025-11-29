@@ -1,0 +1,10 @@
+# Ignorar ambiente virtual
+.venv/
+venv/
+
+# Ignorar arquivos compilados do Python (lixo automático)
+__pycache__/
+*.pyc
+
+# Ignorar variáveis de ambiente (SEGURANÇA: senhas não sobem!)
+.env

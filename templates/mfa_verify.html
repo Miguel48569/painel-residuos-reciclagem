@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block content %}
+<div class="col-md-5 col-lg-4">
+  <div class="card glass-card p-4">
+    <div class="card-body text-center">
+      <div class="mb-4">
+        <div
+          class="avatar bg-dark text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+          style="width: 80px; height: 80px; border: 2px solid #00b09b"
+        >
+          <i class="fas fa-lock fa-2x"></i>
+        </div>
+        <h3 class="fw-bold text-white">Verificação</h3>
+        <p class="text-muted">
+          Olá, <strong>{{ username }}</strong>. Digite o código do seu app
+          autenticador.
+        </p>
+      </div>
+
+      <form method="post">
+        <div class="mb-4">
+          <input
+            type="text"
+            class="form-control form-control-lg text-center fw-bold tracking-wider"
+            name="code"
+            placeholder="000 000"
+            maxlength="6"
+            style="letter-spacing: 5px; font-size: 1.5rem"
+            required
+            autofocus
+          />
+        </div>
+
+        <button class="btn btn-eco w-100 py-2" type="submit">
+          VALIDAR ACESSO
+        </button>
+      </form>
+
+      <div class="mt-4">
+        <a href="/logout" class="text-decoration-none text-muted small"
+          >Cancelar e sair</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
